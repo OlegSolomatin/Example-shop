@@ -1,0 +1,3 @@
+.card{
+    @apply mb-5 block rounded-lg border border-gray-200 shadow-md;
+}

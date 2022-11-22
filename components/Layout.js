@@ -5,8 +5,6 @@ import Footer from './Footer'*/
 import Head from "next/head";
 import styles from "../styles/Header.module.css"
 import Link from "next/link";
-import Data from "../utils/data"
-
 
 export default function Layout({title,children}) {
     return(

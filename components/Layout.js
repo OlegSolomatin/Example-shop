@@ -3,8 +3,13 @@ import Head from "next/head";
 import styles from "../styles/Header.module.css"
 import Link from "next/link";
 import {Store} from "../utils/Store";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {useSession} from "next-auth/react";
 
 export default function Layout({title,children}) {
+
+    const { status , data: session } = useSession()
 
     const { state } = useContext(Store)
     const { cart } = state;
@@ -30,6 +35,8 @@ export default function Layout({title,children}) {
                 <meta name="theme-color" content="#ffffff"/>
             </Head>
 
+            <ToastContainer position={'bottom-center'} limit={1}/>
+
             <div className={styles.container}>
                 <header>
                     <nav className='flex h-12 px-4 justify-between shadow-md shadow-amber-700 items-center'>
@@ -45,9 +52,15 @@ export default function Layout({title,children}) {
                                     </span>
                                 )}
                             </Link>
-                            <Link href='/login' className='p-2'>
-                                Login
-                            </Link>
+                            {status === 'loading' ? (
+                                'Loading'
+                            ) : session?.user ? (
+                                session.user.name
+                            ) : (
+                                <Link className={'p-2'} href="/login">
+                                    Login
+                                </Link>
+                            )}
                         </div>
                     </nav>
                 </header>

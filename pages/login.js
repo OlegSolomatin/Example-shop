@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Layout from "../components/Layout";
 import Link from "next/link";
 import { useForm } from "react-hook-form"
+import { signIn, useSession } from "next-auth/react";
+import { getErrorMessage } from "../utils/erorr"
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 export default function Login() {
+
+    const { data: session } = useSession();
+
+    const router = useRouter();
+    const { redirect } = router.query
+
+    useEffect(() => {
+        if(session?.user){
+            router.push(redirect || '/')
+        }
+    }, [router,session, redirect]);
+    
 
     const {
         handleSubmit,
@@ -11,8 +27,22 @@ export default function Login() {
         formState: { errors },
     } = useForm()
 
-    const submitHandler = ({email, password}) => {
-        console.log(email,password)
+    const submitHandler = async ({login, password}) => {
+        try {
+            const result = await signIn(
+                'credentials', {
+                    redirect: false,
+                    login,
+                    password
+                }
+            )
+            if (result.error) {
+                toast.error(result.error)
+            }
+
+        } catch (err) {
+            toast.error(getErrorMessage(err))
+        }
     }
 
     return (
@@ -20,23 +50,23 @@ export default function Login() {
             <form action="" className={'mx-auto max-w-screen-md'} onSubmit={handleSubmit(submitHandler)}>
                 <h1 className={'mb-4 text-lg'}>Login</h1>
                 <div className={'mb-4'}>
-                    <label htmlFor="email">
-                        Email
+                    <label htmlFor="login">
+                        Login
                     </label>
-                    <input type="email"
+                    <input type="login"
                            className="w-full"
-                           id="email"
+                           id="login"
                            autoFocus
-                           {...register('email', {
-                               required: 'Please enter your email',
+                           {...register('login', {
+                               required: 'Please enter your login',
                                pattern: {
-                                   value: /^[a-zA-Z0-9_,+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-,]+$/i,
-                                   message: 'Please enter valid email'
+                                   value: /^[a-zA-Z](.[a-zA-Z0-9_-]*)$/,
+                                   message: 'Please enter valid login'
                                }
                            })}
                     />
-                    {errors.email && (
-                        <div className={'text-red-500'}>{errors.email.message}</div>
+                    {errors.login && (
+                        <div className={'text-red-500'}>{errors.login.message}</div>
                     )}
                 </div>
                 <div className={'mb-4'}>

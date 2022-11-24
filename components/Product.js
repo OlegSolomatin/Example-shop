@@ -2,8 +2,7 @@ import React from 'react';
 import Link from "next/link";
 import Image from "next/image";
 
-
-export default function Product({product}) {
+export default function Product({product, addToCartHandler}) {
     return (
         <div className="card">
             <Link href={`/product/${product.slug}`}>
@@ -21,7 +20,7 @@ export default function Product({product}) {
                 </Link>
                 <p className="mb-2">{product.brand}</p>
                 <p className={'mb-2'}>${product.price}</p>
-                <button className="primary-button" type="button">
+                <button className="primary-button" type="button" onClick={() => addToCartHandler(product)}>
                     Add to cart
                 </button>
             </div>

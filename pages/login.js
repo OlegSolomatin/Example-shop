@@ -48,7 +48,7 @@ export default function Login() {
     return (
         <Layout title={'Login'}>
             <form action="" className={'mx-auto max-w-screen-md'} onSubmit={handleSubmit(submitHandler)}>
-                <h1 className={'mb-4 text-lg'}>Login</h1>
+                <h1 className={'mb-4 text-lg'}>Log In</h1>
                 <div className={'mb-4'}>
                     <label htmlFor="login">
                         Login

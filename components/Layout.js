@@ -5,19 +5,27 @@ import Link from "next/link";
 import {Store} from "../utils/Store";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {useSession} from "next-auth/react";
+import {signOut,useSession} from "next-auth/react";
+import  { Menu } from "@headlessui/react";
+import DropdownLink from "./DropdownLink";
+import Cookies from 'js-cookie'
 
 export default function Layout({title,children}) {
 
     const { status , data: session } = useSession()
 
-    const { state } = useContext(Store)
+    const { state, dispatch } = useContext(Store)
     const { cart } = state;
     const [cartItemsCount, setCartItemsCount] = useState(0);
     useEffect(() => {
         setCartItemsCount(cart.cartItems.reduce((acc, item) => acc + item.quantity, 0))
-    }, []);
-    
+    }, [cart.cartItems]);
+
+    const logoutHandler = () => {
+        Cookies.remove('cart')
+        dispatch({ type: 'CART_RESET'})
+        signOut({callbackUrl: '/login'})
+    }
 
     return(
         <>
@@ -39,7 +47,7 @@ export default function Layout({title,children}) {
 
             <div className={styles.container}>
                 <header>
-                    <nav className='flex h-12 px-4 justify-between shadow-md shadow-amber-700 items-center'>
+                    <nav className='flex h-12 px-4 justify-between shadow-md shadow-amber-700 items-center rounded-b-lg'>
                         <Link href="/" className='text-lg font-bold'>
                             Brand Name
                         </Link>
@@ -55,7 +63,28 @@ export default function Layout({title,children}) {
                             {status === 'loading' ? (
                                 'Loading'
                             ) : session?.user ? (
-                                session.user.name
+                                <Menu as={'div'} className={'relative inline-block'}>
+                                    <Menu.Button className={'text-blue-600'}>
+                                        {session.user.name}
+                                    </Menu.Button>
+                                    <Menu.Items className={'absolute right-0 w-56 origin-top-right bg-white rounded-lg shadow-lg'}>
+                                        <Menu.Item>
+                                            <DropdownLink className={'dropdown-link'} href={'/profile'}>
+                                                Profile
+                                            </DropdownLink>
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                            <DropdownLink className={'dropdown-link'} href={'/order-history'}>
+                                                Order History
+                                            </DropdownLink>
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                            <DropdownLink className={'dropdown-link'} href={'#'} onClick={logoutHandler}>
+                                                Log Out
+                                            </DropdownLink>
+                                        </Menu.Item>
+                                    </Menu.Items>
+                                </Menu>
                             ) : (
                                 <Link className={'p-2'} href="/login">
                                     Login

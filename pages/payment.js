@@ -15,17 +15,18 @@ export default function Payment() {
     const router = useRouter();
     const submitHandler = (e) => {
         e.preventDefault()
-        if(!setSelectedPaymentMethod) {
+        if(!selectedPaymentMethod) {
             toast.error('Payment method is required')
         }
         dispatch({ type: 'SAVE_PAYMENT_METHOD', payload: selectedPaymentMethod })
         Cookies.set(
             'cart',
             JSON.stringify({
-                ...cart,paymentMethod: setSelectedPaymentMethod
+                ...cart,
+                paymentMethod: selectedPaymentMethod
             })
         )
-        router.push('/placeholder')
+        router.push('/placeorder')
     }
     useEffect(() => {
         if(!shippingAddress.address){
@@ -69,3 +70,5 @@ export default function Payment() {
         </Layout>
     )
 }
+
+Payment.auth = true

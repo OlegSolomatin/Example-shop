@@ -32,7 +32,7 @@ a {
 }*/
 
 .card {
-  @apply mb-5  block   rounded-lg border border-gray-200  shadow-md max-w-[250px] justify-self-center;
+  @apply mb-5 block rounded-lg border border-gray-200 shadow-md max-w-[250px] justify-self-center;
 }
 
 .primary-button {
@@ -49,4 +49,16 @@ input, textarea, select {
 
 .dropdown-link{
   @apply flex p-2 hover:bg-gray-200 hover:rounded-lg;
+}
+
+.placeorder-items{
+  @apply mb-5 block rounded-lg border border-gray-200 shadow-md w-full justify-self-center;
+}
+
+.alert-error {
+  @apply my-3 rounded-lg bg-red-100 p-3 text-red-700;
+}
+
+.alert-success {
+  @apply my-3 rounded-lg bg-green-100 p-3 text-green-700;
 }

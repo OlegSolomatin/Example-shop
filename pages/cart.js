@@ -8,8 +8,17 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import axios from "axios";
 import {toast} from "react-toastify";
+import { useSession } from "next-auth/react";
 
 function CartScreen() {
+    const { data: session, status } = useSession();
+    let redirect = '/login'
+    if (status === "unauthenticated") {
+        redirect = 'login?redirect=/shipping';
+    } else {
+        redirect = '/shipping';
+    }
+
     const router = useRouter();
     const { state, dispatch } = useContext(Store);
     const {
@@ -93,7 +102,7 @@ function CartScreen() {
                             </li>
                             <li>
                                 <button
-                                    onClick={() => router.push('login?redirect=/shipping')}
+                                    onClick={() => router.push(`${redirect}`)}
                                     className="primary-button w-full"
                                 >
                                     Check Out

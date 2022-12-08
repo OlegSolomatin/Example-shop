@@ -39,7 +39,6 @@ export default function Login() {
             if (result.error) {
                 toast.error(result.error)
             }
-
         } catch (err) {
             toast.error(getErrorMessage(err))
         }
@@ -48,10 +47,10 @@ export default function Login() {
     return (
         <Layout title={'Login'}>
             <form action="" className={'mx-auto max-w-screen-md'} onSubmit={handleSubmit(submitHandler)}>
-                <h1 className={'mb-4 text-lg'}>Log In</h1>
+                <h1 className={'mb-4 text-lg'}>Sign In</h1>
                 <div className={'mb-4'}>
                     <label htmlFor="login">
-                        Login
+                        Username
                     </label>
                     <input type="login"
                            className="w-full"
@@ -88,11 +87,11 @@ export default function Login() {
                 </div>
                 <div className={'mb-4'}>
                     <button className={'prymaryButton'}>
-                        Log In
+                        Sign In
                     </button>
                 </div>
                 <div className="mb-4">Don&apos;t have an account? &nbsp;
-                    <Link href={'/register'}>Register</Link>
+                    <Link href={`/register?redirect=${redirect || '/'}`}>Create account</Link>
                 </div>
             </form>
         </Layout>

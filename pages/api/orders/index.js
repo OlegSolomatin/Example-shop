@@ -3,12 +3,13 @@ import Order from '../../../models/Order';
 import db from '../../../utils/db';
 
 const handler = async (req, res) => {
-    const session = await getSession({ req });
+    /*const session = await getSession({ req });
     if (!session) {
         return res.status(401).send('SignIn required');
-    }
+    }*/
 
-    const { user } = session;
+    res.status(201).send(req.body);
+    /*const { user } = session;
     await db.connect();
     const newOrder = new Order({
         ...req.body,
@@ -16,6 +17,6 @@ const handler = async (req, res) => {
     });
 
     const order = await newOrder.save();
-    res.status(201).send(order);
+    res.status(201).send(order);*/
 };
 export default handler;

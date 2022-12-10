@@ -9,6 +9,7 @@ import {toast} from "react-toastify";
 import {getErrorMessage} from "../utils/erorr";
 import axios from "axios";
 import Cookies from 'js-cookie'
+import { getSession } from 'next-auth/react';
 
 export default function PlaceOrder () {
 
@@ -33,11 +34,15 @@ export default function PlaceOrder () {
 
     const [loading, setLoading] = useState(false);
 
+
+
     const placeOrderHandler = async () => {
         try{
             setLoading(true);
-            const { data } = await axios.post('/api/orders',
+            const session = await getSession();
+            const { data } = await axios.post('/api/orders/',
                 {
+                    session,
                     orderItems: cartItems,
                     shippingAddress,
                     paymentMethod,
@@ -46,8 +51,9 @@ export default function PlaceOrder () {
                     taxPrice,
                     totalPrice,
                 });
+            console.log(data);
             setLoading(false);
-            dispatch({type: 'CART_CLEAR_ITEMS'});
+            /*dispatch({type: 'CART_CLEAR_ITEMS'});
             Cookies.set(
                 'cart',
                 JSON.stringify({
@@ -55,7 +61,7 @@ export default function PlaceOrder () {
                     cartItems: [],
                 })
             )
-            router.push(`/order/${data._id}`)
+            router.push(`/order/${data._id}`)*/
         } catch(err) {
             setLoading(false)
             toast.error(getErrorMessage(err));

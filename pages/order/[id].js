@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useReducer } from 'react';
 import Layout from '../../components/Layout';
 import { getErrorMessage } from '../../utils/erorr';
+import { toast } from 'react-toastify';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 
 function reducer(state, action) {
     switch (action.type) {
@@ -56,6 +58,40 @@ function OrderScreen() {
         deliveredAt,
     } = order;
 
+    function createOrder(data, actions) {
+        return actions.order
+            .create({
+                purchase_units: [
+                    {
+                        amount: { value: totalPrice },
+                    },
+                ],
+            })
+            .then((orderID) => {
+                return orderID;
+            });
+    }
+
+    function onApprove(data, actions) {
+        return actions.order.capture().then(async function (details) {
+            try {
+                dispatch({ type: 'PAY_REQUEST' });
+                const { data } = await axios.put(
+                    `/api/orders/${order._id}/pay`,
+                    details
+                );
+                dispatch({ type: 'PAY_SUCCESS', payload: data });
+                toast.success('Order is paid success fully');
+            } catch (err) {
+                dispatch({ type: 'PAY_FAIL', payload: getErrorMessage(err) });
+                toast.error(getErrorMessage(err));
+            }
+        });
+    }
+    function onError(err) {
+        toast.error(getErrorMessage(err));
+    }
+
     return (
         <Layout title={`Order ${orderId}`}>
             <h1 className="mb-4 text-xl">{`Order ${orderId}`}</h1>
@@ -96,8 +132,8 @@ function OrderScreen() {
                                 <thead className="border-b">
                                 <tr>
                                     <th className="px-5 text-left">Item</th>
-                                    <th className="    p-5 text-right">Quantity</th>
-                                    <th className="  p-5 text-right">Price</th>
+                                    <th className="p-5 text-right">Quantity</th>
+                                    <th className="p-5 text-right">Price</th>
                                     <th className="p-5 text-right">Subtotal</th>
                                 </tr>
                                 </thead>
@@ -155,6 +191,22 @@ function OrderScreen() {
                                         <div>${totalPrice}</div>
                                     </div>
                                 </li>
+                                {!isPaid && (
+                                    <li>
+                                        {isPending ? (
+                                            <div>Loading...</div>
+                                        ) : (
+                                            <div className="w-full">
+                                                <PayPalButtons
+                                                    createOrder={createOrder}
+                                                    onApprove={onApprove}
+                                                    onError={onError}
+                                                ></PayPalButtons>
+                                            </div>
+                                        )}
+                                        {loadingPay && <div>Loading...</div>}
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>

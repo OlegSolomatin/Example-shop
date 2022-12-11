@@ -43,7 +43,18 @@ export default function Layout({title,children}) {
                 <meta name="theme-color" content="#ffffff"/>
             </Head>
 
-            <ToastContainer position={'bottom-center'} limit={1}/>
+            <ToastContainer
+                position="top-right"
+                autoClose={1000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
 
             <div className={styles.container}>
                 <header>

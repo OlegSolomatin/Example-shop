@@ -10,7 +10,6 @@ import {getErrorMessage} from "../utils/erorr";
 import axios from "axios";
 import Cookies from 'js-cookie'
 import {getSession, signIn} from 'next-auth/react';
-import AccessToken from '../components/accessToken';
 
 export default function PlaceOrder () {
 
@@ -72,7 +71,6 @@ export default function PlaceOrder () {
     return (
         <Layout title={`Place Order`}>
             <CheckoutWizard activeStep={3}/>
-            <AccessToken />
             <h1 className={'mb-4 text-xl'}>Place Order</h1>
             {
                 cartItems.length === 0 ?

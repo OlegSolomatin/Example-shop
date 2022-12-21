@@ -10,8 +10,9 @@ import  { Menu } from "@headlessui/react";
 import DropdownLink from "./DropdownLink";
 import Cookies from 'js-cookie'
 import { Avatar } from "@nextui-org/react";
+import { useRouter } from 'next/router'
 
-export default function Layout({title,children}) {
+export default function Layout({title,tg,children}) {
 
     const { status , data: session } = useSession()
     const { state, dispatch } = useContext(Store)
@@ -26,6 +27,15 @@ export default function Layout({title,children}) {
         dispatch({ type: 'CART_RESET'})
         signOut({callbackUrl: '/login'})
     }
+    const routes = useRouter();
+
+    const { asPath } = useRouter();
+    const origin =
+        typeof window !== 'undefined' && window.location.origin
+            ? window.location.origin
+            : '';
+
+    const URL = `${origin}${asPath}`;
 
     return(
         <>
@@ -40,11 +50,20 @@ export default function Layout({title,children}) {
                 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/>
                 <meta name="msapplication-TileColor" content="#2b5797"/>
                 <meta name="msapplication-TileImage" content="/mstile-144x144.png"/>
-                <meta name="theme-color" content="#ffffff"/>
+                {
+                    tg ? (
+                        <>
+                            <meta name="theme-tg" content="#000000"/>
+                            <script src="https://telegram.org/js/telegram-web-app.js"></script>
+                        </>
+                    ) : (
+                        <meta name="theme-color" content="#ffffff"/>
+                    )
+                }
             </Head>
 
             <ToastContainer
-                position="top-right"
+                position="bottom-right"
                 autoClose={1000}
                 hideProgressBar={false}
                 newestOnTop={false}
@@ -62,6 +81,9 @@ export default function Layout({title,children}) {
                         <Link href="/" className='text-lg font-bold'>
                             Brand Name
                         </Link>
+                        {/*<Link href="/telegram/" className='text-lg font-bold'>
+                            Telegram WebApp
+                        </Link>*/}
                         <div className={'flex items-center'}>
                             <Link href='/cart' className='p-2'>
                                 Cart

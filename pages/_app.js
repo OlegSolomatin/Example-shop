@@ -1,10 +1,10 @@
 import '../styles/globals.css'
 import '../styles/Button.css'
+import '../styles/tgstyle.css'
 import {StoreProvider} from "../utils/Store";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-
 
 function MyApp({ Component, pageProps: {session, ...pageProps} }) {
   return (
